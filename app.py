@@ -152,7 +152,7 @@ def Calculate_PCP(seq):
 
 def antimicrobial_features(sequence):
      #Amino Acid Symbols
-    AALetter=["A","R","N","D","C","E","Q","G","H","I","L","K","M","F","P","S","T","W","Y","V"]
+    AALetter=["A","C","D","E","F","G","H","I","K","L","M","N","P","Q","R","S","T","V","W","Y"]
  
     final_features = []
     for i in AALetter:
@@ -166,14 +166,15 @@ def antimicrobial_features(sequence):
 #scaling the new features with the scaler made using training data
     scl= joblib.load('AMP01_PCD_min_max_scaled_final_jlib')
     physio=scl.transform([physio])
-    physio= physio.tolist()
+    physio_min_max = np.clip(physio, a_min=0, a_max=1)
+	
     CHT = Calculate_CHT(sequence)
-    final_features= physio[0] + final_features + list(CHT.values()) 
+    final_features= final_features + list(CHT.values()) + physio_min_max[0]
     return final_features
 
 def antiinflammatory_features(sequence):
      #Amino Acid Symbols
-    AALetter=["A","R","N","D","C","E","Q","G","H","I","L","K","M","F","P","S","T","W","Y","V"]
+    AALetter=["A","C","D","E","F","G","H","I","K","L","M","N","P","Q","R","S","T","V","W","Y"]
  
     final_features = []
     for i in AALetter:
@@ -187,9 +188,10 @@ def antiinflammatory_features(sequence):
 #scaling the new features with the scaler made using training data
     scl= joblib.load('AIP_PCD_min_max_scaled_final_jlib')
     physio=scl.transform([physio])
-    physio= physio.tolist()
+    physio_min_max = np.clip(physio, a_min=0, a_max=1)
+	
     CHT = Calculate_CHT(sequence)
-    final_features= physio[0] + final_features + list(CHT.values()) 
+    final_features= final_features + list(CHT.values()) + physio_min_max[0]
     return final_features
 
 def model_predict_antimicrobial(sequence):
